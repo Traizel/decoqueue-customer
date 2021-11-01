@@ -27,63 +27,31 @@ let config = {
     "X-Auth-Token": process.env.BG_AUTH_TOKEN,
   },
 };
-router.delete("/deletecompleterange", rejectUnauthenticated, (req, res) => {
-  //deletes any completed orders after 30 days
- pool
-   .query('DELETE FROM "complete" WHERE timestamp<=$1', [daterange])
-   .then((result) => {
-     res.sendStatus(204); //No Content
-   })
-   .catch((error) => {
-     console.log("Error DELETE ", error);
-     res.sendStatus(500);
-   });
-})
-router.delete("/deletehistoryrange", rejectUnauthenticated, (req, res) => {
-  //deletes any customer coraspondance after 2 years
-  pool
-    .query('DELETE FROM "history" WHERE timestamp<=$1', [daterange2])
-    .then((result) => {
-      res.sendStatus(204); //No Content
-    })
-    .catch((error) => {
-      console.log("Error DELETE ", error);
-      res.sendStatus(500);
-    });
-});
-//used to check if the current order is a new order.
-let orderID = 0
-let prevOrderID = 0
 
-// Handles Ajax request for user information if user is authenticated
-router.get("/", rejectUnauthenticated, (req, res) => {
-  // Send back user object from the session (previously queried from the database)
-  res.send(req.user);
-});
 
-  setInterval(() => {
+setInterval(() => {
     //defines the dates to be used for the timestamp
-      let nowMonth = Number(moment().subtract(5, "hours").month()) + 1;
-      let nowYear = Number(moment().subtract(5, "hours").year());
-      let nowDay = Number(moment().subtract(5, "hours").date());
-      let hour = Number(moment().subtract(5, "hours").hour());
-      let min = Number(moment().subtract(5, "hours").minute());
-      let sec = Number(moment().subtract(5, "hours").second());
-      //make sure all numbers come in as a double digit
-      if (hour < 10) {
-        hour = "0" + String(hour);
-      }
-      if (min < 10) {
-        min = "0" + String(min);
-      }
-      if (sec < 10) {
-        sec = "0" + String(sec);
-      }
-      //make sure the previous month from Jan is December of the previous year
-      if (nowMonth === 1) {
-        prevYear = moment().year() - 1;
-      }
-      //checks for new orders, always pulls up the most recent
+    let nowMonth = Number(moment().subtract(5, "hours").month()) + 1;
+    let nowYear = Number(moment().subtract(5, "hours").year());
+    let nowDay = Number(moment().subtract(5, "hours").date());
+    let hour = Number(moment().subtract(5, "hours").hour());
+    let min = Number(moment().subtract(5, "hours").minute());
+    let sec = Number(moment().subtract(5, "hours").second());
+    //make sure all numbers come in as a double digit
+    if (hour < 10) {
+      hour = "0" + String(hour);
+    }
+    if (min < 10) {
+      min = "0" + String(min);
+    }
+    if (sec < 10) {
+      sec = "0" + String(sec);
+    }
+    //make sure the previous month from Jan is December of the previous year
+    if (nowMonth === 1) {
+      prevYear = moment().year() - 1;
+    }
+    //checks for new orders, always pulls up the most recent
     axios
       .get(
         `https://api.bigcommerce.com/stores/${storeHash}/v2/orders?sort=date_created:desc&limit=20&page=2`,
@@ -165,9 +133,7 @@ router.get("/", rejectUnauthenticated, (req, res) => {
                                           if (element !== []) {
                                             let data = response.data;
                                             for (
-                                              let index = 0;
-                                              index < data.length;
-                                              index++
+                                              let index = 0; index < data.length; index++
                                             ) {
                                               let decoSku = "";
                                               let decoSku3 = "";
@@ -237,7 +203,7 @@ router.get("/", rejectUnauthenticated, (req, res) => {
                                                 decoSku7 === "SISER-9" ||
                                                 decoSku5 === "SP-" ||
                                                 decoSku5 === "CP-"
-                                                
+
                                               ) {
                                                 //run the logic that places the skus in the stock queue
                                                 console.log(
@@ -246,9 +212,7 @@ router.get("/", rejectUnauthenticated, (req, res) => {
                                                 );
                                                 let product_length = "";
                                                 for (
-                                                  let j = 0;
-                                                  j < options.length;
-                                                  j++
+                                                  let j = 0; j < options.length; j++
                                                 ) {
                                                   const opt = options[j];
                                                   let display_name =
@@ -401,11 +365,11 @@ router.get("/", rejectUnauthenticated, (req, res) => {
                                                 } else if (decoSku6 === "FEE-VECT") {
                                                   item_type = "Artwork Redraws";
                                                 }
-                                                  //...place in the custom queue
-                                                  console.log(
-                                                    orderID,
-                                                    "goes into custom queue"
-                                                  );
+                                                //...place in the custom queue
+                                                console.log(
+                                                  orderID,
+                                                  "goes into custom queue"
+                                                );
                                                 const query2Text =
                                                   'INSERT INTO "customitem" (email, first_name, last_name, order_number, sku, qty, created_at, description, item_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id';
                                                 pool.query(query2Text, [
@@ -474,8 +438,46 @@ router.get("/", rejectUnauthenticated, (req, res) => {
         // handle error
         console.log(error);
       });
-      //...check for new orders every 2 min
-  }, 120000);
+    //...check for new orders every 2 min
+}, 120000);
+
+
+router.delete("/deletecompleterange", rejectUnauthenticated, (req, res) => {
+  //deletes any completed orders after 30 days
+ pool
+   .query('DELETE FROM "complete" WHERE timestamp<=$1', [daterange])
+   .then((result) => {
+     res.sendStatus(204); //No Content
+   })
+   .catch((error) => {
+     console.log("Error DELETE ", error);
+     res.sendStatus(500);
+   });
+})
+
+
+router.delete("/deletehistoryrange", rejectUnauthenticated, (req, res) => {
+  //deletes any customer coraspondance after 2 years
+  pool
+    .query('DELETE FROM "history" WHERE timestamp<=$1', [daterange2])
+    .then((result) => {
+      res.sendStatus(204); //No Content
+    })
+    .catch((error) => {
+      console.log("Error DELETE ", error);
+      res.sendStatus(500);
+    });
+});
+//used to check if the current order is a new order.
+let orderID = 0
+let prevOrderID = 0
+
+
+router.get("/", rejectUnauthenticated, (req, res) => {
+  // Send back user object from the session (previously queried from the database)
+  res.send(req.user);
+});
+
 
 router.post("/starttask", rejectUnauthenticated, (req, res, next) => {
   // places items from the new col in the stock queue to in process
@@ -521,6 +523,7 @@ router.post("/starttask", rejectUnauthenticated, (req, res, next) => {
     });
 });
 
+
 router.post("/gobacknew", rejectUnauthenticated, (req, res, next) => {
   // places items from the in process queue in stock orders back to new
   const email = req.body.email;
@@ -559,6 +562,7 @@ router.post("/gobacknew", rejectUnauthenticated, (req, res, next) => {
       res.sendStatus(500); // HTTP SERVER ERROR
     })
 });
+
 
 router.post("/customerresponse", (req, res, next) => {
   // function that's run when customer responds to their email query
@@ -794,6 +798,7 @@ router.post("/customerresponse", (req, res, next) => {
         
     });
 });
+
 
 router.post("/customerconfirm", rejectUnauthenticated, (req, res, next) => {
   // defines info thats sent to the customer for proofing
@@ -1294,6 +1299,7 @@ router.post("/customerconfirm", rejectUnauthenticated, (req, res, next) => {
     });
 });
 
+
 router.post("/markcomplete", rejectUnauthenticated, (req, res, next) => {
   // marks orders as complete and places them in the complete table
   const email = req.body.email;
@@ -1338,6 +1344,8 @@ router.post("/markcomplete", rejectUnauthenticated, (req, res, next) => {
       res.sendStatus(500);
     });
 });
+
+
 router.post("/markcompletecustom", rejectUnauthenticated, (req, res, next) => {
   // marks orders as complete and places them in the complete table
   const email = req.body.email;
@@ -1419,6 +1427,7 @@ router.post("/markcompletecustom", rejectUnauthenticated, (req, res, next) => {
     });
 });
 
+
 router.post("/backtonew", rejectUnauthenticated, (req, res, next) => {
   // marks orders as complete and places them in the complete table
   const email = req.body.email;
@@ -1460,6 +1469,7 @@ router.post("/backtonew", rejectUnauthenticated, (req, res, next) => {
     });
 });
 
+
 router.post("/canned", rejectUnauthenticated, (req, res, next) => {
   const canned = req.body.canned;
   //adds canned responses to the table
@@ -1480,6 +1490,8 @@ router.post("/canned", rejectUnauthenticated, (req, res, next) => {
       res.sendStatus(500);
     });
 });
+
+
 router.post("/addadmin", rejectUnauthenticated, (req, res, next) => {
   // used to reset user logins. It's on a permenent restricted path, only accessesable by manaully changing the code. Extremely secure and protected
   const first_name = req.body.first_name;
@@ -1506,11 +1518,6 @@ router.post("/addadmin", rejectUnauthenticated, (req, res, next) => {
 });
 
 
-
-// Handles login form authenticate/login POST
-// userStrategy.authenticate('local') is middleware that we run on this route
-// this middleware will run our POST if successful
-// this middleware will send a 404 if not successful
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
   console.log("logging body", req.body.username)
   const email = req.body.username;
