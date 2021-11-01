@@ -29,7 +29,7 @@ if (process.env.DATABASE_URL) {
     password: process.env.PG_PASSWORD,
     host:
       "localhost" ||
-      "app-4d31d795-fce1-46e0-a83d-5aed8f7749a6-do-user-8379856-0.b.db.ondigitalocean.com", // Server hosting the postgres database
+      "app-88ea9dce-7c00-4630-b869-f3b6e0162ad8-do-user-8379856-0.b.db.ondigitalocean.com", // Server hosting the postgres database
     port: 5432 || 25060, // env var: PGPORT
     database: process.env.DATABASE_NAME, // CHANGED
     max: 10, // max number of clients in the pool
