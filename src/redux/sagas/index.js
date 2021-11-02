@@ -1,4 +1,5 @@
 import { all } from 'redux-saga/effects';
+import itemSaga from './ItemSaga';
 
 
 // rootSaga is the primary saga.
@@ -6,8 +7,6 @@ import { all } from 'redux-saga/effects';
 // This is imported in index.js as rootSaga
 export default function* rootSaga() {
   yield all([
-
-
-
+    itemSaga(),
   ]);
 }

@@ -8,17 +8,8 @@ const sessionMiddleware = require('./modules/session-middleware');
 
 const passport = require('./strategies/user.strategy');
 
-// API requests
-
-
-
-// let data = {
-// };
-
-
 // Route includes
 const userRouter = require('./routes/userrouter');
-const itemRouter = require('./routes/itemrouter');
 
 
 // Body parser middleware
@@ -35,12 +26,6 @@ app.use(passport.session());
 /* Routes */ 
 //i.e. helps direct necessary actions/data to the correct place
 app.use('/api/user', userRouter);
-app.use('/api/item', itemRouter);
-
-app.get("/healthcheck", (req, res) => {
-res.sendStatus(200)
-});
-
 
 // Serve static files
 app.use(express.static('build'));
