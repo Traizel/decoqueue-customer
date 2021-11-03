@@ -1,7 +1,10 @@
 import { render } from "react-dom";
 import React, { useState, Component } from "react";
+import { useDispatch } from 'react-redux';
 
 function App () {
+
+    const dispatch = useDispatch();
 
     const [order, setOrder] = useState(' ');
     const [firstName, setFirstName] = useState(' ');
@@ -9,11 +12,13 @@ function App () {
 
     const login = (event) => {
         event.preventDefault();
-        alert(`
-        ${order}
-        ${firstName}
-        ${lastName}
-            `);
+        dispatch({
+        type: 'ATTEMPT_LOGIN', 
+        payload: {
+            order: order,
+            firstName: firstName,
+            lastName: lastName,
+        }})
         setOrder(' ');
         setFirstName(' ');
         setLastName(' ');
