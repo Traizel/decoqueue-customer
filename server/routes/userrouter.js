@@ -12,20 +12,28 @@ router.post("/login", (req, res) => {
   const first = req.body.firstName;
   const last = req.body.lastName;
 
-console.log(order, first, last);
+console.log(`order: ${order}, First Name: ${first}, Last Name: ${last}`);
 
 const queryText = `SELECT * from "item";`;
 
 pool
   .query(queryText)
   .then((result) => {
-    console.log(result.data);
+  
+    let itemToSend = []
+    let failure = [{order_number: 'FAIL'}]
+    for (item of result.rows) {
+      if (order === item.order_number && first === item.first_name && last === item.last_name) {
+        itemToSend.push(item);
+      }
+    }
 
-    // for (item of result.data) {
+    if (itemToSend[0]) {
+      res.send(itemToSend).status(201);
+    } else {
+      res.send(failure).status(401);
+    }
 
-    // }
-
-    res.sendStatus(201);
   })
   .catch((error) => {
     console.log("Error on get Items ", error);

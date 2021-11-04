@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-const loginMode = (state = 'login', action) => {
+const info = (state = 'login', action) => {
     switch (action.type) {
         case 'LOGIN':
-            return 'login';
+            return action.payload;
         default:
             return state;
     }
@@ -11,7 +11,7 @@ const loginMode = (state = 'login', action) => {
 
 
 const rootReducer = combineReducers({
-    loginMode,
+    info,
 });
 
 export default rootReducer;

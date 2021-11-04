@@ -1,14 +1,15 @@
 import { render } from "react-dom";
 import React, { useState, Component } from "react";
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 function App () {
 
+    const info = useSelector(store => store.info);
     const dispatch = useDispatch();
 
-    const [order, setOrder] = useState(' ');
-    const [firstName, setFirstName] = useState(' ');
-    const [lastName, setLastName] = useState(' ');
+    const [order, setOrder] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const login = (event) => {
         event.preventDefault();
@@ -19,9 +20,27 @@ function App () {
             firstName: firstName,
             lastName: lastName,
         }})
-        setOrder(' ');
-        setFirstName(' ');
-        setLastName(' ');
+        setOrder('');
+        setFirstName('');
+        setLastName('');
+    }
+
+    let orderDisplay;
+
+    if (info.order_number === 'FAIL') {
+        orderDisplay = `INCORRECT INFORMATION! TRY AGAIN!`;
+    } else if (info.order_number) {
+        orderDisplay = `
+        Hello, ${info.first_name}!
+        Your Order Number is: ${info.order_number}.
+        Your Email: ${info.email}.
+
+        ${info.product_options};
+        <button href="${info.product_options}">View your Proof</button>
+
+        <button>Approve</button>
+        <button>Request Changes</button>
+        `;
     }
 
 
@@ -36,6 +55,9 @@ function App () {
                 <br/>
                 <button onClick={(e) => login(e)}>Login</button>
             </form>
+            <div>
+                {orderDisplay}
+            </div>
         </div>
     )
 }
