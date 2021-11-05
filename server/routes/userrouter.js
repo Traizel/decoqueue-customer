@@ -14,12 +14,12 @@ router.post("/login", (req, res) => {
 
 console.log(`order: ${order}, First Name: ${first}, Last Name: ${last}`);
 
-const queryText = `SELECT * from "item";`;
+const queryText = `SELECT * from "customerconfirm";`;
 
 pool
   .query(queryText)
   .then((result) => {
-  
+
     let itemToSend = []
     let failure = [{order_number: 'FAIL'}]
     for (item of result.rows) {

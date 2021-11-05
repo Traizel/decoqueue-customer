@@ -28,19 +28,33 @@ function App () {
     let orderDisplay;
 
     if (info.order_number === 'FAIL') {
-        orderDisplay = `INCORRECT INFORMATION! TRY AGAIN!`;
+        orderDisplay = 
+        <>
+        <h2>You have no orders to review at the time!</h2>
+        <h3>Common reasons for this are:</h3>
+        <ul>
+            <li>Your Login info is incorrect. Make sure you are typing in the correct order #, and First and Last name that was put in the order! Capitalization matters!</li>
+            <li>Your Order is not ready yet. You will get a notification via email and text when the order is ready for review!</li>
+            <li>You have already submitted an approval/change request. If you requested changes, you will recieve a notification when your order is ready for review again!</li>
+        </ul>
+        </>
+        ;
     } else if (info.order_number) {
-        orderDisplay = `
-        Hello, ${info.first_name}!
-        Your Order Number is: ${info.order_number}.
-        Your Email: ${info.email}.
-
-        ${info.product_options};
-        <button href="${info.product_options}">View your Proof</button>
-
+        orderDisplay = 
+        <>
+        <h3>Hello, {info.first_name}!</h3>
+        <h4>Your Order Number is: {info.order_number}.</h4>
+        <h4>Your Email: {info.email}.</h4>
+        <br/>
+        <p>{info.comments}</p>
+        <br/>
+        <form action={info.upload_url1} target="_blank">
+            <input type="submit" value="View your Proof" />
+        </form>
+        <br/>
         <button>Approve</button>
         <button>Request Changes</button>
-        `;
+        </>;
     }
 
 
