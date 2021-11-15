@@ -24,7 +24,57 @@ pool
     let failure = [{order_number: 'FAIL'}]
     for (item of result.rows) {
       if (order === item.order_number && first === item.first_name && last === item.last_name) {
-        itemToSend.push(item);
+        let picToSend;
+        if(item.upload_url1 !== null) {
+          picToSend = item.upload_url1;
+        } else if (item.upload_url2 !== null) {
+          picToSend = item.upload_url2;
+        } else if (item.upload_url3 !== null) {
+          picToSend = item.upload_url3;
+        } else if (item.upload_url4 !== null) {
+          picToSend = item.upload_url4;
+        } else if (item.upload_url5 !== null) {
+          picToSend = item.upload_url5;
+        } else if (item.upload_url6 !== null) {
+          picToSend = item.upload_url6;
+        } else if (item.upload_url7 !== null) {
+          picToSend = item.upload_url7;
+        } else if (item.upload_url8 !== null) {
+          picToSend = item.upload_url8;
+        } else if (item.upload_url9 !== null) {
+          picToSend = item.upload_url9;
+        } else if (item.upload_url10 !== null) {
+          picToSend = item.upload_url10;
+        } else if (item.upload_url11 !== null) {
+          picToSend = item.upload_url11;
+        } else if (item.upload_url12 !== null) {
+          picToSend = item.upload_url12;
+        } else if (item.upload_url13 !== null) {
+          picToSend = item.upload_url13;
+        } else if (item.upload_url14 !== null) {
+          picToSend = item.upload_url14;
+        } else if (item.upload_url15 !== null) {
+          picToSend = item.upload_url15;
+        } else if (item.upload_url16 !== null) {
+          picToSend = item.upload_url16;
+        } else if (item.upload_url17 !== null) {
+          picToSend = item.upload_url17;
+        } else if (item.upload_url18 !== null) {
+          picToSend = item.upload_url18;
+        } else if (item.upload_url19 !== null) {
+          picToSend = item.upload_url19;
+        } else if (item.upload_url20 !== null) {
+          picToSend = item.upload_url20;
+        }
+
+        itemToSend.push({
+          email: item.email, 
+          first_name: item.first_name, 
+          last_name: item.last_name,
+          order_number: item.order_number,
+          comments: item.comments,
+          description: item.description,
+          pic: picToSend});
       }
     }
 

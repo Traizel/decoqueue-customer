@@ -48,7 +48,7 @@ function App () {
         <br/>
         <p>{info.comments}</p>
         <br/>
-        <form action={info.upload_url1} target="_blank">
+        <form action={info.pic} target="_blank">
             <input type="submit" value="View your Proof" />
         </form>
         <br/>
