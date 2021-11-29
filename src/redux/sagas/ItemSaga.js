@@ -2,17 +2,17 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
-function* sendSupaColor(action) {
+function* attemptLogin(action) {
   try {
-    yield axios.post("/api/user/login", action.payload);
-    yield put({ type: "LOGIN" });
+    const response = yield axios.post("/api/user/login", action.payload);
+    yield put({ type: "LOGIN", payload: response.data[0]});
   } catch (error) {
     console.log("Error with adding a new item:", error);
   }
 }
 
 function* itemSaga() {
-yield takeLatest('SEND_SUPACOLOR', sendSupaColor);
+yield takeLatest('ATTEMPT_LOGIN', attemptLogin);
 }
 
 export default itemSaga;
